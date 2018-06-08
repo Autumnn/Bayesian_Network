@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 
-def Initialize_Data(dir, has_nominal=False, nominal_index=[0], nominal_value=[]):
+def Initialize_Data(dir, has_nominal=False, nominal_index=[], nominal_value=[]):
     Num_lines = len(open(dir, 'r').readlines())
     num_columns = 0
     data_info_lines = 0
@@ -48,7 +48,9 @@ def Initialize_Data(dir, has_nominal=False, nominal_index=[0], nominal_value=[])
                     if i < length_row - 1:
                         if has_nominal:
                             if i in nominal_index:
-                                Features[l - data_info_lines - 1][i] = nominal_value.index(row[i])
+                                ii = nominal_index.index(i)
+                                Features[l - data_info_lines - 1][i] = nominal_value[ii].index(row[i])
+                                #Features[l - data_info_lines - 1][i] = nominal_value.index(row[i])
                             else:
                                 Features[l - data_info_lines - 1][i] = row[i]
                         else:
