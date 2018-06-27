@@ -35,6 +35,7 @@ for Dir in dirs:
         Re_Negative_Features = Re_Features[Num_Positive_train:]
         print(Re_Negative_Features.shape[0])
 
+
         bayes = BayesianNetwork.from_samples(Re_Negative_Features, algorithm='chow-liu')
         pt = bayes.log_probability(Negative_Features_train).sum()
         print('Chow-Liu', pt)
