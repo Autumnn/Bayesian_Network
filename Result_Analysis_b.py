@@ -1,7 +1,7 @@
 import numpy as np
 
 
-file = "Result_xGBoost.txt"
+file = "Result_Bayesian.txt"
 #    file = "Result_a_" + str(f_i) + ".txt"
 i = 0
 with open(file, "r") as r:
@@ -48,7 +48,7 @@ with open(file, "r") as r:
 
 method_list = AUC[temp].keys()
 
-file_write = "Result_xGBoost_Analysis.txt"
+file_write = "Result_Bayesian_Analysis.txt"
 with open(file_write, 'a') as w:
     head_line = "Accuracy" + '\t' + '\t'.join(str(x) + '\t' for x in method_list) + '\n'
     w.write(head_line)
