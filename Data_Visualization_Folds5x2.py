@@ -8,33 +8,19 @@ import seaborn as sns
 
 colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)       # '#539caf' is a good color !
 
-name = 'train_FD001.txt'
-
-df = pd.read_csv(name, sep=' ', header=None)
-df.drop(columns=[26, 27], inplace=True)
-
-var_list = df.var()
-index_remove = []
-for i in range(len(var_list)):
-    if var_list[i] < 0.001:
-        index_remove.append(i)
-df.drop(columns=index_remove, inplace=True)
+name = 'Folds5x2.xlsx'
+df = pd.read_excel(name, index_col=None)
 num_samples = len(df)
 
-unit_list = df[0].tolist()
-index_unit_change = []
-for i in range(num_samples-1):
-    if unit_list[i] != unit_list[i+1]:
-        index_unit_change.append(i-9)       # window length is 10
-index_unit_change.append(num_samples-10)
 Label = np.linspace(0, 0, num_samples)
-for item in index_unit_change:
-    print(item)
-    for j in range(10):
-        Label[item+j] = 2
-        Label[item-j-1] = 1
+unit_list = df['PE'].tolist()
+for i in range(num_samples):
+    if unit_list[i] < 430.8:
+        Label[i] = 2       # window length is 10
+    elif 430.8 <= unit_list[i] < 433.4:
+        Label[i] = 1
 df['Label'] = Label
-df.drop(columns=[0, 1], inplace=True)
+#df.drop(columns=[0, 1], inplace=True)
 
 attribute_used = list(df)
 print(attribute_used)

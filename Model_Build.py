@@ -4,7 +4,7 @@ from pomegranate import BayesianNetwork
 
 
 #path = "High_IR_Data_cross_folder"
-path = "CMAPSSData_npz"
+path = "Folds5x2_npz"
 dirs = os.listdir(path) #Get files in the folder
 
 for Dir in dirs:
