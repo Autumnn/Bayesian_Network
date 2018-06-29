@@ -3,7 +3,8 @@ import os
 from pomegranate import BayesianNetwork
 
 
-path = "High_IR_Data_cross_folder"
+#path = "High_IR_Data_cross_folder"
+path = "CMAPSSData_npz"
 dirs = os.listdir(path) #Get files in the folder
 
 for Dir in dirs:
@@ -31,12 +32,12 @@ for Dir in dirs:
         Num_Negative_test = Negative_Features_test.shape[0]
         Negative_Labels_test = np.linspace(0, 0, Num_Negative_test)
 
-        bayes = BayesianNetwork.from_samples(Negative_Features_train, algorithm='exact-dp')
+        bayes = BayesianNetwork.from_samples(Negative_Features_train, algorithm='chow-liu')
         pt = bayes.log_probability(Negative_Features_train).sum()
-        print('Exact Shortest', pt)
+        print('Chow-Liu', pt)
 
         file_name = file.split('.')[0]
-        with open(file_name + '_Exact_Shortest_BayesNet.json', 'w') as w:
+        with open(file_name + '_Chow-Liu_BayesNet.json', 'w') as w:
             w.write(bayes.to_json())
 
 

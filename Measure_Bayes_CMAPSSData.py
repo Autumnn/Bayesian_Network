@@ -6,8 +6,10 @@ from metrics_list import metric_list
 from pomegranate import BayesianNetwork
 import math
 
-path = "High_IR_Data_cross_folder"
-bayes_path = "High_IR_Data_cross_folder_BayesNet"
+#path = "High_IR_Data_cross_folder"
+#bayes_path = "High_IR_Data_cross_folder_BayesNet"
+path = "CMAPSSData_npz"
+bayes_path = "CMAPSSData_BayesNet"
 dirs = os.listdir(path)
 
 for Dir in dirs:
@@ -18,7 +20,7 @@ for Dir in dirs:
 
     methods = ["xGBoost", "SMOTE", "Bayesian", "Bayesian_e", "Pure_Bayesian"]
     for m in methods:
-        Num_Cross_Folders = 5
+        Num_Cross_Folders = 1
         ml_record = metric_list(np.array([1]), np.array([1]), Num_Cross_Folders)
         i = 0
         for file in files:
@@ -170,5 +172,5 @@ for Dir in dirs:
             ml_record.auc_measure(0, 0, i, Label_test, Label_score[:,1])
             i += 1
 
-        file_wirte = "Result_Bayesian_all.txt"
+        file_wirte = "Result_CMAPSSData_Bayesian_all.txt"
         ml_record.output(file_wirte, m, Dir)

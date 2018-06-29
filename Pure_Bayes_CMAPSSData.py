@@ -6,8 +6,10 @@ from metrics_list import metric_list
 from pomegranate import BayesianNetwork
 import math
 
-path = "High_IR_Data_cross_folder"
-bayes_path = "High_IR_Data_cross_folder_BayesNet"
+#path = "High_IR_Data_cross_folder"
+#bayes_path = "High_IR_Data_cross_folder_BayesNet"
+path = "CMAPSSData_npz"
+bayes_path = "CMAPSSData_BayesNet"
 dirs = os.listdir(path)
 
 for Dir in dirs:
@@ -16,9 +18,9 @@ for Dir in dirs:
     bayes_dir_path = bayes_path + "/" + Dir
     files = os.listdir(dir_path)  # Get files in the folder
 
-    methods = ["xGBoost", "SMOTE", "Bayesian", "Bayesian_e", "Pure_Bayesian"]
+    methods = ["xGBoost", "SMOTE", "Pure_Bayesian"]
     for m in methods:
-        Num_Cross_Folders = 5
+        Num_Cross_Folders = 1
         ml_record = metric_list(np.array([1]), np.array([1]), Num_Cross_Folders)
         i = 0
         for file in files:
@@ -65,80 +67,6 @@ for Dir in dirs:
                 clf.fit(Feature_train, Label_train)
                 Label_predict = clf.predict(Feature_test)
                 Label_score = clf.predict_proba(Feature_test)
-            elif m == "Bayesian":
-                bayes = BayesianNetwork.from_json(bayes_name)
-                Negative_Features_train_prob = bayes.probability(Negative_Features_train)
-                Positive_Features_train_prob = np.zeros((Num_Positive_train, 1))
-                for k in range(Num_Positive_train):
-                    try:
-                        Positive_Features_train_prob[k] = bayes.probability(Positive_Features_train[k])
-                    except KeyError:
-                        Positive_Features_train_prob[k] = 0
-
-                max_prob = np.max(Positive_Features_train_prob)
-                print(max_prob)
-
-                if max_prob > 0:
-                    index = np.where(Negative_Features_train_prob <= max_prob)
-                else:
-                    index = np.argsort(Negative_Features_train_prob)[0:Num_Positive_train - 1]
-
-                Negative_Features_Filter_train = Negative_Features_train[index]
-                Num_Negative_Filter_train = Negative_Features_Filter_train.shape[0]
-                Negative_Labels_Filter_train = np.linspace(0, 0, Num_Negative_Filter_train)
-                Feature_train = np.concatenate((Positive_Features_train, Negative_Features_Filter_train))
-                Label_train = np.concatenate((Positive_Labels_train, Negative_Labels_Filter_train))
-                clf.fit(Feature_train, Label_train)
-                Label_predict = clf.predict(Feature_test)
-                Label_score = clf.predict_proba(Feature_test)
-                Num_test = Num_Positive_test + Num_Negative_test
-                for j in range(Num_test):
-                    feature = Feature_test[j]
-                    try:
-                        feature_prob = bayes.probability(feature)
-                    except KeyError:
-                        feature_prob = 0
-                    if feature_prob > max_prob:
-                        Label_predict[j] = 0
-                        Label_score[j] = [1, 0]
-            elif m == "Bayesian_e":
-                bayes = BayesianNetwork.from_json(bayes_name)
-                Negative_Features_train_prob = bayes.probability(Negative_Features_train)
-                Positive_Features_train_prob = np.zeros((Num_Positive_train, 1))
-                for k in range(Num_Positive_train):
-                    try:
-                        Positive_Features_train_prob[k] = bayes.probability(Positive_Features_train[k])
-                    except KeyError:
-                        Positive_Features_train_prob[k] = 0
-
-                max_prob = np.max(Positive_Features_train_prob)
-                print(max_prob)
-
-                if max_prob > 0:
-                    index = np.where(Negative_Features_train_prob <= max_prob)
-                    if len(index) < Num_Positive_train:
-                        index = np.argsort(Negative_Features_train_prob)[0:Num_Positive_train - 1]
-                else:
-                    index = np.argsort(Negative_Features_train_prob)[0:Num_Positive_train - 1]
-
-                Negative_Features_Filter_train = Negative_Features_train[index]
-                Num_Negative_Filter_train = Negative_Features_Filter_train.shape[0]
-                Negative_Labels_Filter_train = np.linspace(0, 0, Num_Negative_Filter_train)
-                Feature_train = np.concatenate((Positive_Features_train, Negative_Features_Filter_train))
-                Label_train = np.concatenate((Positive_Labels_train, Negative_Labels_Filter_train))
-                clf.fit(Feature_train, Label_train)
-                Label_predict = clf.predict(Feature_test)
-                Label_score = clf.predict_proba(Feature_test)
-                Num_test = Num_Positive_test + Num_Negative_test
-                for j in range(Num_test):
-                    feature = Feature_test[j]
-                    try:
-                        feature_prob = bayes.probability(feature)
-                    except KeyError:
-                        feature_prob = 0
-                    if feature_prob > max_prob:
-                        Label_predict[j] = 0
-                        Label_score[j] = [1, 0]
             elif m == "Pure_Bayesian":
                 bayes = BayesianNetwork.from_json(bayes_name)
                 Negative_Features_train_prob = bayes.probability(Negative_Features_train)
@@ -170,5 +98,5 @@ for Dir in dirs:
             ml_record.auc_measure(0, 0, i, Label_test, Label_score[:,1])
             i += 1
 
-        file_wirte = "Result_Bayesian_all.txt"
+        file_wirte = "Result_CMAPSSData_Bayesian_Pure.txt"
         ml_record.output(file_wirte, m, Dir)
