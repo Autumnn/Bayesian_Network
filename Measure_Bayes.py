@@ -11,6 +11,8 @@ import math
 path = "Folds5x2_npz"
 bayes_path = "Folds5x2_BayesNet"
 dirs = os.listdir(path)
+# test Git
+
 
 for Dir in dirs:
     print("Data Set Name: ", Dir)
