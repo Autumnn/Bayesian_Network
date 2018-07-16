@@ -3,7 +3,7 @@ from keras.layers import Input
 import cGAN as gan
 import os
 
-path = "Folds5x2_npz"
+path = "CMAPSSData_npz"
 dirs = os.listdir(path) #Get files in the folder
 First_line = True
 
@@ -49,7 +49,7 @@ for Dir in dirs:
         GAN.summary()
 
         Pre_train_epoches = 100
-        Train_epoches = 10000
+        Train_epoches = 1000
         gan.pretrain(G, D, Labels_train_o, Features_train_o, noise_dim=input_dim, epoches=Pre_train_epoches)
         d_loss, g_loss = gan.train(GAN, G, D, Labels_train_o, Features_train_o, epochs=Train_epoches, noise_dim=input_dim,
                                    verbose=True)
