@@ -1,8 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
-from matplotlib import colors as mcolors
 
-colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
 
 name = 'train_FD001.txt'
 print(name)
@@ -31,15 +29,17 @@ index_unit_change.append(num_samples-1)
 df.drop(columns=[0, 1], inplace=True)
 num = len(index_unit_change)
 
-fig = plt.figure()
-Title = "Feature Plot"
+fig = plt.figure(figsize=(8,72))
+Title = "Feature Test"
 fig.canvas.set_window_title(Title)
-fig.subplots_adjust(hspace=0.8)
+fig.subplots_adjust(hspace=1.2)
 
 for j in range(len(df.columns)):
     ax = plt.subplot(len(df.columns) + 1, 1, j + 1)
     for item in index_unit_change:
-        data_to_add = df.iloc[item-Min_cycle+1:item+1,[j]].tolist()
+        data_to_add = df.iloc[item - Min_cycle + 1:item + 1, [j]]
+        data_to_add = data_to_add.reset_index()
+        data_to_add.drop(columns=['index'], inplace=True)
         ax.plot(data_to_add)
 
 fig_file = dir_path + '/' + 'No_Filter.png'

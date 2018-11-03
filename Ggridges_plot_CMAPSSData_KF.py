@@ -62,16 +62,11 @@ for j in range(len(df.columns)):
             K[k] = Pminus[k] / (Pminus[k] + R)
             xhat[k] = xhatminus[k] + K[k] * (data_to_add.iloc[k, [0]] - xhatminus[k])
             P[k] = (1 - K[k]) * Pminus[k]
-
         if i ==0:
             data_to_show = pd.DataFrame(xhat)
+            i += 1
         else:
             data_to_show = pd.concat([data_to_show, pd.DataFrame(xhat)], axis=1, ignore_index=True)
-
-        i += 1
-        if i > 1:
-            break
-
     data_cut = data_to_show.iloc[20:]
     print(data_cut)
     if j in [0,1,2,4,5,6,8,9,10,11]:
@@ -83,5 +78,6 @@ for j in range(len(df.columns)):
         for k in range(len(data_cut.columns)):
             ax.plot(data_cut.iloc[:, [k]] - Max_value[k])
 
-fig_file = dir_path + '/' + 'Demo_1.png'
+
+fig_file = dir_path + '/' + 'Kalman_Filter_shift.png'
 fig.savefig(fig_file)
